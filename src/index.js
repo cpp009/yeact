@@ -37,3 +37,5 @@ function updateContainer(root, element) {
 
 }
 
+const root = document.getElementById('root')
+console.log(root)

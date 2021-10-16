@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/cpp009/yeact#readme",
   "devDependencies": {
+    "html-webpack-plugin": "^5.4.0",
     "webpack": "^5.58.2",
     "webpack-cli": "^4.9.0",
     "webpack-dev-server": "^4.3.1"
