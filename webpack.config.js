@@ -8,7 +8,7 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
   },
-   devServer: {
+  devServer: {
     static: {
       directory: path.join(__dirname, ''),
     },
@@ -16,8 +16,20 @@ module.exports = {
     port: 9090,
   },
   plugins: [
-     new HtmlWebpackPlugin({
+    new HtmlWebpackPlugin({
       template: 'index.html'
     })
-  ]
+  ],
+  module: {
+    rules: [{
+      test: /\.m?js$/,
+      exclude: /node_modules/,
+      use: {
+        loader: "babel-loader",
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+    }]
+  }
 };
