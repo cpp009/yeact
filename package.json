@@ -4,7 +4,9 @@
   "description": "a mini React like Javascript UI framework. Reinventing a react wheel.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack --config webpack.config.js",
+    "dev": "npx webpack serve --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/cpp009/yeact/issues"
   },
-  "homepage": "https://github.com/cpp009/yeact#readme"
+  "homepage": "https://github.com/cpp009/yeact#readme",
+  "devDependencies": {
+    "webpack": "^5.58.2",
+    "webpack-cli": "^4.9.0",
+    "webpack-dev-server": "^4.3.1"
+  }
 }
