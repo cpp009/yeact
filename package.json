@@ -1,6 +1,6 @@
 {
   "name": "yeact",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "a mini React like Javascript UI framework. Reinventing a react wheel.",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/cpp009/yeact.git"
   },
-  "author": "",
+  "author": "cpp009",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/cpp009/yeact/issues"
