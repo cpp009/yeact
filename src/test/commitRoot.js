@@ -1,3 +1,4 @@
+import { ContentReset, Deletion, Placement, PlacementAndUpdate, Ref, Update } from "../reconciler/FiberFlags"
 
 
 
@@ -50,6 +51,27 @@ function commitMutationEffects(root) {
 
   while(nextEffect !== null) {
     console.log(nextEffect.name)
+
+    const flags = nextEffect.flags
+
+    if (flags & ContentReset) {
+      // 重置 text 内容
+    }
+
+    if (flags & Ref) {
+      // 清空 ref
+    }
+
+    const primaryFlags = falgs & (Placement | Update | Deletion)
+    switch(primaryFlags) {
+      case PlacementAndUpdate:
+        commitPlacement(nextEffect)
+        nextEffect.flags &= ~Placement
+
+        const current = nextEffect.alternate
+        commitWork(current, nextEffect)
+        break
+    }
     nextEffect = nextEffect.nextEffect
   }
 }
