@@ -147,8 +147,6 @@ function ChildReconciler(shouldTrackSideEffects) {
 
   function reconcileChildFibers(returnFiber, currentFirstChild, newChild) {
     const isObject = typeof newChild === "object" && newChild !== "null";
-
-    debugger
     if (isObject) {
       switch (newChild.$$typeof) {
         case ElementType.REACT_ELEMENT_TYPE:
