@@ -1,10 +1,10 @@
 import ReactDOM from './dom/client/ReactDOM'
-import { testCreateElement } from './test/testCreateElement'
+import { createLegacyRoot } from './dom/client/ReactDOMRoot'
+import { createElement } from './react/ReactElement'
 
 console.log('hello entry')
 
+const elem = createElement('div', {key: 'myKey'}, 'hello summer')
 const root = document.getElementById('root')
-console.log(root)
-//ReactDOM.render()
-testCreateElement()
+ReactDOM.render(elem, root)
 

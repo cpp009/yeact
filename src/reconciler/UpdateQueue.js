@@ -27,3 +27,17 @@ export function enqueueUpdate(fiber, update) {
   }
   sharedQueue.pending = update
 }
+
+
+export function initializeUpdateQueue(fiber) {
+  const queue = {
+    baseState: fiber.memoizedState,
+    firstBaseState: null,
+    lastBaseState: null,
+    shared: {
+      pending: null
+    },
+    effects: null
+  }
+  fiber.updateQueue = queue
+}

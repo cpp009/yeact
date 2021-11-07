@@ -1,3 +1,4 @@
+import { createFiberRoot } from "./FiberRoot";
 import { createUpdate, enqueueUpdate } from "./UpdateQueue";
 
 
@@ -18,8 +19,7 @@ export function updateContainer(
 }
 
 export function createContainer(
-  containerInfo,
-  tag
+  containerInfo // DOM element of root
 ) {
-  
+  return createFiberRoot(containerInfo)
 }

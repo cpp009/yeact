@@ -1,4 +1,5 @@
 import { FiberTag } from "../constant";
+import { HostRoot } from "./WorkTags";
 
 
 function FiberNode(tag, pendingProps, key) {
@@ -80,4 +81,9 @@ export function createFiberFromTypeAndProps(type, key, pendingProps) {
   fiber.type = resolvedType;
 
   return fiber;
+}
+
+
+export function createHostRootFiber() {
+  return createFiber(HostRoot, null, null)
 }
