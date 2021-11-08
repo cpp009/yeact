@@ -1,4 +1,5 @@
 import { createFiberRoot } from "./FiberRoot";
+import { scheduleUpdateOnFiber } from "./FiberWorkLoop";
 import { createUpdate, enqueueUpdate } from "./UpdateQueue";
 
 
