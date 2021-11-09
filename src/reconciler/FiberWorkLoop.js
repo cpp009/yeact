@@ -1,4 +1,5 @@
 import { createWorkInProgress } from "./Fiber";
+import { beginWork } from "./fiberBeginwork";
 import { commitPlacement } from "./FiberCommitWork"
 import { Deletion, Placement, PlacementAndUpdate, Update } from "./FiberFlags"
 
@@ -76,9 +77,22 @@ function workLoopSync() {
   }
 }
 
-function performUnitOfWork() {
-  console.log(workInProgress)
+function performUnitOfWork(unitOfWork) {
+
+  console.log(unitOfWork)
+  const current = workInProgress.alternate
+  const next = beginWork(current, unitOfWork)
+
+  unitOfWork.memoizedProps = unitOfWork.pendingProps
+  if (next === null) {
+    completeUnitOfWork(unitOfWork)
+  } else {
+    workInProgress = next
+  }
   workInProgress = null
+}
+
+function completeUnitOfWork(unitOfWork)  {
 }
 
 
