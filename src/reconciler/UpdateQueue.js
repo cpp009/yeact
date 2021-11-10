@@ -1,104 +1,89 @@
-
-
-let hasForceUpdate = false
+let hasForceUpdate = false;
 
 export const UpdateState = 0;
 export const ReplaceState = 1;
 export const ForceUpdate = 2;
 export const CaptureUpdate = 3;
 
-
 export function createUpdate() {
   return {
     tag: UpdateState,
     payload: null,
-    next: null
-  }
+    next: null,
+  };
 }
 
 export function enqueueUpdate(fiber, update) {
-  const updateQueue = fiber.updateQueue
-  const sharedQueue = updateQueue.shared
-  const pending = sharedQueue.pending
+  const updateQueue = fiber.updateQueue;
+  const sharedQueue = updateQueue.shared;
+  const pending = sharedQueue.pending;
 
   if (pending === null) {
-    update.next = update
+    update.next = update;
   } else {
-    update.next = pending.next
-    pending.next = update
+    update.next = pending.next;
+    pending.next = update;
   }
-  sharedQueue.pending = update
+  sharedQueue.pending = update;
 }
-
 
 export function initializeUpdateQueue(fiber) {
   const queue = {
     baseState: fiber.memoizedState,
-    firstBaseState: null,
-    lastBaseState: null,
+    firstBaseUpdate: null,
+    lastBaseUpdate: null,
     shared: {
-      pending: null
+      pending: null,
     },
-    effects: null
-  }
-  fiber.updateQueue = queue
+    effects: null,
+  };
+  fiber.updateQueue = queue;
 }
 
+export function processUpdateQueue(workInProgress, props, instance) {
+  const queue = workInProgress.updateQueue;
 
-export function processUpdateQueue(
-  workInProgress,
-  props,
-  instance
-) {
+  hasForceUpdate = false;
 
-  const queue = workInProgress.updateQueue
+  let firstBaseUpdate = queue.firstBaseUpdate;
+  let lastBaseUpdate = queue.lastBaseUpdate;
 
-  hasForceUpdate = false
-
-  let firstBaseUpdate = queue.firstBaseState
-  let lastBaseUpdate = queue.lastBaseState
-
-  const pendingQueue = queue.shared.pending
+  const pendingQueue = queue.shared.pending;
   if (pendingQueue !== null) {
-    queue.shared.pending = null
+    queue.shared.pending = null;
 
-    const lastPendingUpdate = pendingQueue
-    const firstPendingUpdate = lastPendingUpdate.next
-    lastPendingUpdate.next = null
+    const lastPendingUpdate = pendingQueue;
+    const firstPendingUpdate = lastPendingUpdate.next;
+    lastPendingUpdate.next = null;
     if (firstBaseUpdate === null) {
-      firstBaseUpdate = firstPendingUpdate
+      firstBaseUpdate = firstPendingUpdate;
     } else {
-      lastBaseUpdate.next = firstPendingUpdate
+      lastBaseUpdate.next = firstPendingUpdate;
     }
-    lastBaseUpdate = lastPendingUpdate
+    lastBaseUpdate = lastPendingUpdate;
   }
 
-
   if (firstBaseUpdate !== null) {
+    let newState = queue.baseState;
 
-    let newState = queue.baseState
-
-    let update = firstBaseUpdate
+    let update = firstBaseUpdate;
     do {
-
       newState = getStateFromUpdate(
         workInProgress,
         queue,
         update,
         newState,
         props
-      )
-      update = update.next
+      );
+      update = update.next;
       if (update === null) {
-        break
+        break;
       }
-    } while(ture)
+    } while (ture);
 
-    workInProgress.memoizedState = newState
+    workInProgress.memoizedState = newState;
   }
-
 }
-
 
 function getStateFromUpdate(
   workInProgress,
@@ -108,13 +93,27 @@ function getStateFromUpdate(
   nextProps,
   instance
 ) {
-
-  const payload = update.payload
-  let partialState = partialState
+  const payload = update.payload;
+  let partialState = payload;
 
   if (partialState === null || partialState === undefined) {
-    return prevState
+    return prevState;
   }
 
-  return Object.assign({}, prevState, partialState)
+  return Object.assign({}, prevState, partialState);
+}
+
+export function cloneUpdateQueue(current, workInProgress) {
+  const queue = workInProgress.updateQueue;
+  const currentQueue = current.updateQueue;
+  if (queue === currentQueue) {
+    const clone = {
+      baseState: currentQueue.baseState,
+      firstBaseUpdate: currentQueue.firstBaseUpdate,
+      lastBaseUpdate: currentQueue.lastBaseUpdate,
+      shared: currentQueue.shared,
+      effects: currentQueue.effects,
+    };
+    workInProgress.updateQueue = clone;
+  }
 }

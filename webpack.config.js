@@ -9,10 +9,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
-    static: {
-      directory: path.join(__dirname, ''),
-    },
-    compress: true,
+    compress: false,
     port: 9090,
   },
   plugins: [

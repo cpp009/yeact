@@ -1,5 +1,6 @@
 import { ElementType, FiberTag } from "../constant";
 import { createFiberFromText, createFiberFromElement, createFiberFromFragment} from "./Fiber";
+import {REACT_ELEMENT_TYPE} from '../shared/ReactSymbols'
 
 export function reconcileChildren(current, workInProgress, nextChildren) {
   workInProgress.child = mountChildFibers(workInProgress, null, nextChildren);
@@ -149,7 +150,7 @@ function ChildReconciler(shouldTrackSideEffects) {
     const isObject = typeof newChild === "object" && newChild !== "null";
     if (isObject) {
       switch (newChild.$$typeof) {
-        case ElementType.REACT_ELEMENT_TYPE:
+        case REACT_ELEMENT_TYPE:
           return placeSingleChild(
             reconcileSingleElement(returnFiber, currentFirstChild, newChild)
           );
