@@ -14,6 +14,7 @@ function FiberNode(tag, pendingProps, key) {
   this.return = null;
   this.child = null;
   this.sibling = null;
+  this.index = 0;
 
   this.ref = null;
 

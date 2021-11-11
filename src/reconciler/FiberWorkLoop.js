@@ -89,10 +89,10 @@ function performUnitOfWork(unitOfWork) {
   } else {
     workInProgress = next
   }
-  workInProgress = null
 }
 
 function completeUnitOfWork(unitOfWork)  {
+  workInProgress = null
 }
 
 

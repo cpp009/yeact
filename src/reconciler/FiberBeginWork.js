@@ -35,7 +35,7 @@ function updateHostRoot(current, workInProgress) {
   const nextChildren = nextState.element
 
   reconcileChildren(current, workInProgress, nextChildren)
-  console.log(workInProgress)
+  return workInProgress.child
 }
 
 export function reconcileChildren(

@@ -1,6 +1,7 @@
 import { ElementType, FiberTag } from "../constant";
-import { createFiberFromText, createFiberFromElement, createFiberFromFragment} from "./Fiber";
+import { createFiberFromText, createFiberFromElement, createFiberFromFragment, createWorkInProgress} from "./Fiber";
 import {REACT_ELEMENT_TYPE} from '../shared/ReactSymbols'
+import { Placement } from "./FiberFlags";
 
 export function reconcileChildren(current, workInProgress, nextChildren) {
   workInProgress.child = mountChildFibers(workInProgress, null, nextChildren);
@@ -11,7 +12,7 @@ export const mountChildFibers = ChildReconciler(false);
 
 function ChildReconciler(shouldTrackSideEffects) {
   function deleteChild(returnFiber, childToDelete) {
-    const deletions = returnFiber.deletions;
+    let deletions = returnFiber.deletions;
     if (deletions === null) {
       deletions = [childToDelete];
     } else {
@@ -29,6 +30,9 @@ function ChildReconciler(shouldTrackSideEffects) {
   }
 
   function placeSingleChild(newFiber) {
+    if (shouldTrackSideEffects && newFiber.alternate) {
+      newFiber.flags = Placement
+    }
     return newFiber;
   }
 
@@ -47,34 +51,34 @@ function ChildReconciler(shouldTrackSideEffects) {
     const key = element.key;
 
     // Reuse element
-    // let child = currentFirstChild;
-    // while (child !== null) {
-    //   if (child.key !== key) {
-    //     switch (child.tag) {
-    //       case FiberTag.Fragment:
-    //         if (element.type === ElementType.REACT_ELEMENT_TYPE) {
-    //           deleteRemainingChildren(returnFiber, child);
-    //           const existing = useFiber(child, element.props.children);
-    //           existing.return = returnFiber;
-    //           return existing
-    //         }
-    //         break
-    //       default: {
-    //         if (child.elementType === element.type) {
-    //           deleteRemainingChildren(returnFiber, child)
-    //           const existing = useFiber(child, element.props)
-    //           existing.return = returnFiber
-    //           return existing
-    //         }
-    //       } 
-    //     }
-    //     deleteRemainingChildren(returnFiber, child);
-    //   } else {
-    //     deleteChild(returnFiber, child);
-    //   }
+    let child = currentFirstChild;
+    while (child !== null) {
+      if (child.key !== key) {
+        switch (child.tag) {
+          case FiberTag.Fragment:
+            if (element.type === ElementType.REACT_ELEMENT_TYPE) {
+              deleteRemainingChildren(returnFiber, child);
+              const existing = useFiber(child, element.props.children);
+              existing.return = returnFiber;
+              return existing
+            }
+            break
+          default: {
+            if (child.elementType === element.type) {
+              deleteRemainingChildren(returnFiber, child)
+              const existing = useFiber(child, element.props)
+              existing.return = returnFiber
+              return existing
+            }
+          } 
+        }
+        deleteRemainingChildren(returnFiber, child);
+      } else {
+        deleteChild(returnFiber, child);
+      }
 
-    //   child = child.sibling;
-    // }
+      child = child.sibling;
+    }
 
     // Replaced by children when element is a fragment
     if (element.type === ElementType.REACT_FRAGMENT_TYPE) {
@@ -188,4 +192,13 @@ function coerceRef(
     typeof mixedRef !== 'function')
 
   return mixedRef
+}
+
+
+function useFiber(fiber, pendingProps) {
+  const clone = createWorkInProgress(fiber, pendingProps)
+  clone.index = 0
+  clone.sibling = null // Single Child
+
+  return clone
 }
