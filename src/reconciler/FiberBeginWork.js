@@ -1,6 +1,6 @@
 import { mountChildFibers, reconcileChildFibers } from "./ReactChildFiber";
 import { cloneUpdateQueue, processUpdateQueue } from "./UpdateQueue";
-import { HostRoot } from "./WorkTags";
+import { HostComponent, HostRoot, HostText } from "./WorkTags";
 
 let didReceiveUpdate = false
 
@@ -18,7 +18,22 @@ export function beginWork(
   switch(workInProgress.tag) {
     case HostRoot:
       return updateHostRoot(current, workInProgress)
+    case HostComponent:
+      return  updateHostComponent(current, workInProgress)
   }
+}
+
+function updateHostComponent(current, workInProgress) {
+  debugger
+  const type = workInProgress.type
+  const nextProps = workInProgress.pendingProps
+  const prevProps = current !== null ? current.memoizedProps : null
+
+  let nextChildren = nextProps.children
+
+
+  reconcileChildren(current, workInProgress, nextChildren)
+  return workInProgress.child
 }
 
 
