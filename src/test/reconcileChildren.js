@@ -45,6 +45,7 @@ function reconcileChildFibers(
     )
   }
 
+    console.log('jijij')
   if (Array.isArray(newChild)) {
     return reconcileChildrenArray(
       returnFiber,

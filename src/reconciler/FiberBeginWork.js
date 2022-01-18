@@ -15,22 +15,27 @@ export function beginWork(
     didReceiveUpdate = false
   }
 
-  switch(workInProgress.tag) {
+  switch (workInProgress.tag) {
     case HostRoot:
       return updateHostRoot(current, workInProgress)
     case HostComponent:
-      return  updateHostComponent(current, workInProgress)
+      return updateHostComponent(current, workInProgress)
+    case HostText:
+      return updateHostText(current, workInProgress)
   }
 }
 
+
+function updateHostText(current, workInProgress) {
+  return null;
+}
+
 function updateHostComponent(current, workInProgress) {
-  debugger
   const type = workInProgress.type
   const nextProps = workInProgress.pendingProps
   const prevProps = current !== null ? current.memoizedProps : null
 
   let nextChildren = nextProps.children
-
 
   reconcileChildren(current, workInProgress, nextChildren)
   return workInProgress.child
@@ -61,7 +66,7 @@ export function reconcileChildren(
   if (current === null) {
     // mount, nextChildren -> child Fiber -> workInProgress
     workInProgress.child = mountChildFibers(workInProgress, null, nextChildren)
-  } else  {
+  } else {
     // update
     workInProgress.child = reconcileChildFibers(
       workInProgress,

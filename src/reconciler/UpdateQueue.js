@@ -8,6 +8,7 @@ export const CaptureUpdate = 3;
 export function createUpdate() {
   return {
     tag: UpdateState,
+    callback: null,
     payload: null,
     next: null,
   };
@@ -24,7 +25,7 @@ export function enqueueUpdate(fiber, update) {
     update.next = pending.next;
     pending.next = update;
   }
-  sharedQueue.pending = update;
+  updateQueue.shared.pending = update;
 }
 
 export function initializeUpdateQueue(fiber) {

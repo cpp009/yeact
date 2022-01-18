@@ -2,6 +2,7 @@ import { createWorkInProgress } from "./Fiber";
 import { beginWork } from "./fiberBeginwork";
 import { commitPlacement } from "./FiberCommitWork"
 import { Deletion, Placement, PlacementAndUpdate, Update } from "./FiberFlags"
+import { HostComponent, HostRoot, HostText } from "./WorkTags";
 
 const RootIncomplete = 0;
 const RootCompleted = 5;
@@ -17,10 +18,7 @@ function commitMutationEffects(
   root
 ) {
 
-
-
   while(nextEffect !== null) {
-
     const primaryFlags = flags & (Placement | Update | Deletion)
     switch(primaryFlags) {
       case Placement: {
@@ -79,7 +77,6 @@ function workLoopSync() {
 
 function performUnitOfWork(unitOfWork) {
 
-  console.log(unitOfWork)
   const current = workInProgress.alternate
   const next = beginWork(current, unitOfWork)
 
@@ -92,7 +89,53 @@ function performUnitOfWork(unitOfWork) {
 }
 
 function completeUnitOfWork(unitOfWork)  {
-  workInProgress = null
+  let completedWork = unitOfWork
+  // 自下而上构建
+  while (completedWork !== null) {
+    const current = completedWork.alternate
+    const returnFiber = completedWork.return
+    completWork(current, completedWork)
+    const siblingFiber = completedWork.sibling
+    if (siblingFiber !== null) {
+      workInProgress = siblingFiber
+      return 
+    }
+
+    // The last sibling
+    completedWork = returnFiber
+    workInProgress = returnFiber
+  }
+}
+
+function completWork(current, workInProgress) {
+  const {pendingProps, type} = workInProgress
+
+  switch(workInProgress.tag) {
+    case HostRoot: {
+      const {containerInfo} = workInProgress.stateNode
+      appendChild(containerInfo, workInProgress.child)
+      return null;
+    }
+    case HostComponent: {
+      const instance = document.createElement(type)
+      workInProgress.stateNode = instance
+      appendChild(instance, workInProgress.child)
+      return null
+    }
+    case HostText: {
+      const text = document.createTextNode(pendingProps + '')
+      workInProgress.stateNode = text
+      return null
+    }
+  }
+}
+
+function appendChild(parentInstance, firstChild) {
+      let node = firstChild
+      while (node !== null) {
+        parentInstance.appendChild(node.stateNode)
+        node = node.sibling
+      }
 }
 
 

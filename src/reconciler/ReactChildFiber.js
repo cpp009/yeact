@@ -1,6 +1,6 @@
 import { ElementType, FiberTag } from "../constant";
-import { createFiberFromText, createFiberFromElement, createFiberFromFragment, createWorkInProgress} from "./Fiber";
-import {REACT_ELEMENT_TYPE} from '../shared/ReactSymbols'
+import { createFiberFromText, createFiberFromElement, createFiberFromFragment, createWorkInProgress } from "./Fiber";
+import { REACT_ELEMENT_TYPE } from '../shared/ReactSymbols'
 import { Placement } from "./FiberFlags";
 
 export function reconcileChildren(current, workInProgress, nextChildren) {
@@ -70,7 +70,7 @@ function ChildReconciler(shouldTrackSideEffects) {
               existing.return = returnFiber
               return existing
             }
-          } 
+          }
         }
         deleteRemainingChildren(returnFiber, child);
       } else {
@@ -128,21 +128,20 @@ function ChildReconciler(shouldTrackSideEffects) {
     newChild
   ) {
 
-
     if (typeof newChild === 'string' || typeof newChild === 'number') {
-      const created = createFiberFromText( '' + newChild)
+      const created = createFiberFromText('' + newChild)
       created.return = returnFiber
       return created
     }
 
+
     if (typeof newChild === 'object' && newChild !== null) {
-      switch(newChild.$$typeof) {
-        case ElementType.REACT_ELEMENT_TYPE:
-          const created = createFiberFromElement(
-            newChild
-          )
+      switch (newChild.$$typeof) {
+        case REACT_ELEMENT_TYPE: {
+          const created = createFiberFromElement(newChild)
           created.return = returnFiber
           return created
+        }
       }
     }
 
@@ -175,7 +174,8 @@ function ChildReconciler(shouldTrackSideEffects) {
       )
     }
 
-
+    // 未匹配上删除节点，返回 null
+    return deleteRemainingChildren(returnFiber, currentFirstChild)
   }
 
   return reconcileChildFibers;
@@ -191,7 +191,7 @@ function coerceRef(
   if (mixedRef !== null &&
     typeof mixedRef !== 'function')
 
-  return mixedRef
+    return mixedRef
 }
 
 
