@@ -1,3 +1,4 @@
+import { intenralReactPropsKey, internalInstanceKey } from "../dom/client/ReactDOMRoot";
 import { createWorkInProgress } from "./Fiber";
 import { beginWork } from "./fiberBeginwork";
 import { commitPlacement } from "./FiberCommitWork"
@@ -117,7 +118,7 @@ function completWork(current, workInProgress) {
       return null;
     }
     case HostComponent: {
-      const instance = document.createElement(type)
+      const instance = createInstance(type,workInProgress.pendingProps, workInProgress)
       workInProgress.stateNode = instance
       appendChild(instance, workInProgress.child)
       return null
@@ -145,4 +146,18 @@ function prepareFreshStack(root) {
   workInProgressRoot = root
   workInProgress = createWorkInProgress(root.current)
   workInProgressRootExitStatus = RootIncomplete
+}
+
+function createInstance(
+  type,
+  props,
+  internalInstanceHandle
+) {
+
+  const instance = document.createElement(type)
+
+  // update internal props
+  instance[intenralReactPropsKey] = props
+  instance[internalInstanceKey] = internalInstanceHandle
+  return instance
 }
