@@ -85,6 +85,12 @@ export function createFiberFromTypeAndProps(type, key, pendingProps) {
   return fiber;
 }
 
+function shouldConstruct(type) {
+  const prototype = type.prototype
+
+  return !!(prototype && prototype.isReactComponent)
+}
+
 
 export function createHostRootFiber() {
   return createFiber(HostRoot, null, null)

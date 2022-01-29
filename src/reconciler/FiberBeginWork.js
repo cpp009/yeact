@@ -1,6 +1,6 @@
 import { mountChildFibers, reconcileChildFibers } from "./ReactChildFiber";
 import { cloneUpdateQueue, processUpdateQueue } from "./UpdateQueue";
-import { HostComponent, HostRoot, HostText } from "./WorkTags";
+import { ClassComponent, HostComponent, HostRoot, HostText, IndeterminateComponent } from "./WorkTags";
 
 let didReceiveUpdate = false
 
@@ -14,8 +14,13 @@ export function beginWork(
   } else {
     didReceiveUpdate = false
   }
+  console.log(workInProgress, 'jkijiji')
 
   switch (workInProgress.tag) {
+    case IndeterminateComponent:
+      return null
+    case ClassComponent:
+      return updateClassComponent(current, workInProgress, workInProgress.type)
     case HostRoot:
       return updateHostRoot(current, workInProgress)
     case HostComponent:
@@ -23,6 +28,14 @@ export function beginWork(
     case HostText:
       return updateHostText(current, workInProgress)
   }
+  return null
+}
+
+function  updateClassComponent(current, workInProgress, Component) {
+
+  const inst = new Component()
+  reconcileChildren(current, workInProgress, inst.render())
+  return workInProgress.chidl
 }
 
 

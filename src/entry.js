@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from './dom/client/ReactDOM'
 import { createLegacyRoot } from './dom/client/ReactDOMRoot'
 import { createElement } from './react/ReactElement'
+import Yeact from './react/React'
 import RD from 'react-dom'
 console.log('hello entry')
 
@@ -16,7 +17,18 @@ RD.render((
     </div>
 ), document.getElementById('realroot'))
 
+class Counter extends Yeact.Component {
+
+
+    render() {
+        return <div>
+            counter
+        </div>
+    } 
+}
+
 ReactDOM.render(<div><span>hello</span><button onClick={(e) => {
-    console.log(e)
-    console.log('jijijiji')
-}}>click</button><div>world</div></div>, root)
+    console.log(e, 'xxxx')
+}}>click</button><div>world</div>
+<Counter />
+</div>, root)

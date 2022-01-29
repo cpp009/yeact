@@ -3,7 +3,7 @@ import { createWorkInProgress } from "./Fiber";
 import { beginWork } from "./fiberBeginwork";
 import { commitPlacement } from "./FiberCommitWork"
 import { Deletion, Placement, PlacementAndUpdate, Update } from "./FiberFlags"
-import { HostComponent, HostRoot, HostText } from "./WorkTags";
+import { ClassComponent, HostComponent, HostRoot, HostText } from "./WorkTags";
 
 const RootIncomplete = 0;
 const RootCompleted = 5;
@@ -116,6 +116,9 @@ function completWork(current, workInProgress) {
       const {containerInfo} = workInProgress.stateNode
       appendChild(containerInfo, workInProgress.child)
       return null;
+    }
+    case ClassComponent: {
+      return null
     }
     case HostComponent: {
       const instance = createInstance(type,workInProgress.pendingProps, workInProgress)
